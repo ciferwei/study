@@ -82,6 +82,75 @@ function init() {
         }
         lastTouchEnd = now;
     }, false);
+    
+    // 防止全屏模式下select触发键盘
+    preventSelectKeyboard();
+}
+
+// 防止select在全屏模式下触发键盘
+function preventSelectKeyboard() {
+    const select = difficultySelect;
+    
+    // 检查是否在全屏模式
+    function isInFullscreenMode() {
+        return window.matchMedia('(display-mode: standalone)').matches || 
+               isFullscreen() ||
+               document.body.classList.contains('fullscreen-mode');
+    }
+    
+    // 监听select的focus事件，阻止键盘弹出
+    select.addEventListener('focus', (e) => {
+        if (isInFullscreenMode()) {
+            e.preventDefault();
+            e.stopPropagation();
+            // 立即失去焦点，防止键盘弹出
+            select.blur();
+            // 阻止事件冒泡
+            return false;
+        }
+    }, true);
+    
+    // 监听mousedown和touchstart，在iOS上阻止键盘
+    ['mousedown', 'touchstart'].forEach(eventType => {
+        select.addEventListener(eventType, (e) => {
+            if (isInFullscreenMode()) {
+                // 阻止默认行为，但允许选择
+                e.stopPropagation();
+                // 不阻止事件，让select仍然可以工作，但不触发键盘
+            }
+        }, { passive: false, capture: true });
+    });
+    
+    // 监听click事件，在全屏模式下阻止键盘
+    select.addEventListener('click', (e) => {
+        if (isInFullscreenMode()) {
+            // 允许点击选择，但立即blur防止键盘
+            setTimeout(() => {
+                select.blur();
+            }, 100);
+        }
+    }, true);
+    
+    // 添加属性防止键盘
+    select.setAttribute('readonly', 'readonly');
+    select.setAttribute('tabindex', '-1');
+    
+    // 监听全屏状态变化，动态调整
+    document.addEventListener('fullscreenchange', () => {
+        if (isInFullscreenMode()) {
+            select.setAttribute('tabindex', '-1');
+        } else {
+            select.removeAttribute('tabindex');
+        }
+    });
+    
+    document.addEventListener('webkitfullscreenchange', () => {
+        if (isInFullscreenMode()) {
+            select.setAttribute('tabindex', '-1');
+        } else {
+            select.removeAttribute('tabindex');
+        }
+    });
 }
 
 // 开始游戏

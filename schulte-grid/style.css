@@ -96,6 +96,23 @@ header h1 {
     background: white;
     cursor: pointer;
     outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* 防止在全屏模式下触发键盘 */
+.difficulty-selector select[readonly] {
+    pointer-events: auto;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.difficulty-selector select[readonly]:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
 .difficulty-selector select:hover {
@@ -705,6 +722,39 @@ header h1 {
     .container {
         border-radius: 0;
         max-width: 100%;
+    }
+    
+    /* 防止select在全屏模式下触发键盘 */
+    select {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    select:focus {
+        outline: none;
+    }
+}
+
+/* 全屏模式下防止键盘弹出 */
+body.fullscreen-mode select,
+html:fullscreen select,
+html:-webkit-full-screen select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS Safari全屏模式特殊处理 */
+@supports (-webkit-touch-callout: none) {
+    body.fullscreen-mode select:focus,
+    html:fullscreen select:focus,
+    html:-webkit-full-screen select:focus {
+        -webkit-appearance: none;
+        background-image: none;
     }
 }
 
