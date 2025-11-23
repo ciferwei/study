@@ -15,6 +15,8 @@ const startBtn = document.getElementById('startBtn');
 const resetBtn = document.getElementById('resetBtn');
 const printBtn = document.getElementById('printBtn');
 const difficultySelect = document.getElementById('difficulty');
+const difficultyButtons = document.getElementById('difficultyButtons');
+const difficultyBtnElements = difficultyButtons ? difficultyButtons.querySelectorAll('.difficulty-btn') : [];
 const timerDisplay = document.getElementById('timer');
 const currentNumDisplay = document.getElementById('currentNum');
 const bestTimeDisplay = document.getElementById('bestTime');
@@ -59,6 +61,9 @@ function init() {
     closeModal.addEventListener('click', closeResultModal);
     clearHistoryBtn.addEventListener('click', clearHistory);
     difficultySelect.addEventListener('change', onDifficultyChange);
+    
+    // 初始化难度按钮组
+    initDifficultyButtons();
     
     // 监听全屏状态变化
     document.addEventListener('fullscreenchange', updateFullscreenButton);
@@ -106,74 +111,77 @@ function init() {
         }
     }, { passive: false });
     
-    // 防止全屏模式下select触发键盘
-    preventSelectKeyboard();
+    // 初始化难度选择器（全屏模式下使用按钮替代select）
+    updateDifficultySelector();
 }
 
-// 防止select在全屏模式下触发键盘
-function preventSelectKeyboard() {
-    const select = difficultySelect;
+// 初始化难度按钮组
+function initDifficultyButtons() {
+    if (!difficultyButtons) return;
     
-    // 检查是否在全屏模式
-    function isInFullscreenMode() {
-        return window.matchMedia('(display-mode: standalone)').matches || 
-               isFullscreen() ||
-               document.body.classList.contains('fullscreen-mode');
+    // 为每个按钮绑定点击事件
+    difficultyBtnElements.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const value = parseInt(btn.dataset.value);
+            // 更新select的值（保持同步）
+            difficultySelect.value = value;
+            // 更新按钮状态
+            difficultyBtnElements.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // 触发change事件
+            onDifficultyChange();
+        });
+    });
+    
+    // 监听全屏状态变化，切换显示方式
+    updateDifficultySelector();
+    document.addEventListener('fullscreenchange', updateDifficultySelector);
+    document.addEventListener('webkitfullscreenchange', updateDifficultySelector);
+    
+    // 监听PWA模式
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        updateDifficultySelector();
+    }
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', updateDifficultySelector);
+}
+
+// 更新难度选择器显示（在全屏模式下使用按钮，普通模式使用select）
+function updateDifficultySelector() {
+    const isFullscreenMode = window.matchMedia('(display-mode: standalone)').matches || 
+                            isFullscreen() ||
+                            document.body.classList.contains('fullscreen-mode');
+    
+    if (isFullscreenMode) {
+        // 全屏模式：隐藏select，显示按钮组
+        if (difficultySelect) {
+            difficultySelect.style.display = 'none';
+            difficultySelect.disabled = true;
+        }
+        if (difficultyButtons) {
+            difficultyButtons.style.display = 'flex';
+        }
+    } else {
+        // 普通模式：显示select，隐藏按钮组
+        if (difficultySelect) {
+            difficultySelect.style.display = 'block';
+            difficultySelect.disabled = false;
+        }
+        if (difficultyButtons) {
+            difficultyButtons.style.display = 'none';
+        }
     }
     
-    // 监听select的focus事件，阻止键盘弹出
-    select.addEventListener('focus', (e) => {
-        if (isInFullscreenMode()) {
-            e.preventDefault();
-            e.stopPropagation();
-            // 立即失去焦点，防止键盘弹出
-            select.blur();
-            // 阻止事件冒泡
-            return false;
-        }
-    }, true);
-    
-    // 监听mousedown和touchstart，在iOS上阻止键盘
-    ['mousedown', 'touchstart'].forEach(eventType => {
-        select.addEventListener(eventType, (e) => {
-            if (isInFullscreenMode()) {
-                // 阻止默认行为，但允许选择
-                e.stopPropagation();
-                // 不阻止事件，让select仍然可以工作，但不触发键盘
+    // 同步按钮状态
+    if (difficultySelect && difficultyBtnElements.length > 0) {
+        const currentValue = difficultySelect.value;
+        difficultyBtnElements.forEach(btn => {
+            if (btn.dataset.value === currentValue) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
             }
-        }, { passive: false, capture: true });
-    });
-    
-    // 监听click事件，在全屏模式下阻止键盘
-    select.addEventListener('click', (e) => {
-        if (isInFullscreenMode()) {
-            // 允许点击选择，但立即blur防止键盘
-            setTimeout(() => {
-                select.blur();
-            }, 100);
-        }
-    }, true);
-    
-    // 添加属性防止键盘
-    select.setAttribute('readonly', 'readonly');
-    select.setAttribute('tabindex', '-1');
-    
-    // 监听全屏状态变化，动态调整
-    document.addEventListener('fullscreenchange', () => {
-        if (isInFullscreenMode()) {
-            select.setAttribute('tabindex', '-1');
-        } else {
-            select.removeAttribute('tabindex');
-        }
-    });
-    
-    document.addEventListener('webkitfullscreenchange', () => {
-        if (isInFullscreenMode()) {
-            select.setAttribute('tabindex', '-1');
-        } else {
-            select.removeAttribute('tabindex');
-        }
-    });
+        });
+    }
 }
 
 // 开始游戏
@@ -582,6 +590,8 @@ function updateFullscreenButton() {
         fullscreenBtn.title = '全屏模式';
         document.body.classList.remove('fullscreen-mode');
     }
+    // 更新难度选择器显示方式
+    updateDifficultySelector();
 }
 
 // 初始化全屏按钮状态

@@ -37,13 +37,22 @@
         <div class="control-panel">
             <div class="difficulty-selector">
                 <label>难度选择：</label>
-                <select id="difficulty">
+                <!-- 桌面模式使用select -->
+                <select id="difficulty" class="difficulty-select-desktop">
                     <option value="3">简单 (3×3)</option>
                     <option value="4">中等 (4×4)</option>
                     <option value="5" selected>标准 (5×5)</option>
                     <option value="6">困难 (6×6)</option>
                     <option value="7">挑战 (7×7)</option>
                 </select>
+                <!-- 移动设备/全屏模式使用按钮组 -->
+                <div id="difficultyButtons" class="difficulty-buttons">
+                    <button class="difficulty-btn" data-value="3">3×3</button>
+                    <button class="difficulty-btn" data-value="4">4×4</button>
+                    <button class="difficulty-btn active" data-value="5">5×5</button>
+                    <button class="difficulty-btn" data-value="6">6×6</button>
+                    <button class="difficulty-btn" data-value="7">7×7</button>
+                </div>
             </div>
             
             <div class="button-group">

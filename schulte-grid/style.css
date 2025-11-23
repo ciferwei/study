@@ -101,18 +101,41 @@ header h1 {
     appearance: none;
 }
 
-/* 防止在全屏模式下触发键盘 */
-.difficulty-selector select[readonly] {
-    pointer-events: auto;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+/* 难度按钮组（全屏模式下使用） */
+.difficulty-buttons {
+    display: none; /* 默认隐藏，全屏模式下显示 */
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
-.difficulty-selector select[readonly]:focus {
+.difficulty-btn {
+    padding: 8px 16px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: bold;
+    background: white;
+    color: #667eea;
+    cursor: pointer;
     outline: none;
-    border-color: #667eea;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.difficulty-btn:hover {
+    background: #e7f3ff;
+    border-color: #764ba2;
+}
+
+.difficulty-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #764ba2;
+}
+
+.difficulty-btn:active {
+    transform: scale(0.95);
 }
 
 .difficulty-selector select:hover {
@@ -733,37 +756,27 @@ header h1 {
         max-width: 100%;
     }
     
-    /* 防止select在全屏模式下触发键盘 */
-    select {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+    /* PWA模式下使用按钮组替代select */
+    .difficulty-select-desktop {
+        display: none !important;
     }
     
-    select:focus {
-        outline: none;
+    .difficulty-buttons {
+        display: flex !important;
     }
 }
 
-/* 全屏模式下防止键盘弹出 */
-body.fullscreen-mode select,
-html:fullscreen select,
-html:-webkit-full-screen select {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+/* 全屏模式下使用按钮组替代select */
+body.fullscreen-mode .difficulty-select-desktop,
+html:fullscreen .difficulty-select-desktop,
+html:-webkit-full-screen .difficulty-select-desktop {
+    display: none !important;
 }
 
-/* iOS Safari全屏模式特殊处理 */
-@supports (-webkit-touch-callout: none) {
-    body.fullscreen-mode select:focus,
-    html:fullscreen select:focus,
-    html:-webkit-full-screen select:focus {
-        -webkit-appearance: none;
-        background-image: none;
-    }
+body.fullscreen-mode .difficulty-buttons,
+html:fullscreen .difficulty-buttons,
+html:-webkit-full-screen .difficulty-buttons {
+    display: flex !important;
 }
+
 
