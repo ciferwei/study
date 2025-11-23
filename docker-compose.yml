@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  study-games:
+    image: nginx:alpine
+    container_name: study-games
+    ports:
+      - "8080:80"   # HTTP端口
+      - "8443:443"  # HTTPS端口（如果配置了SSL）
+    volumes:
+      # 将整个study目录映射到nginx的web根目录
+      - .:/usr/share/nginx/html:ro
+    restart: unless-stopped
+    networks:
+      - study-network
+
+networks:
+  study-network:
+    driver: bridge
+

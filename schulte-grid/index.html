@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="专为小学生设计的注意力训练工具，提升专注力和减少粗心错误">
+    <meta name="keywords" content="舒尔特方格,注意力训练,专注力,小学生,数学思维">
+    
+    <!-- PWA相关 -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="舒尔特方格">
+    
+    <!-- iOS图标 -->
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icon-192.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <title>舒尔特方格 - 注意力训练</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 舒尔特方格训练</h1>
+            <p class="subtitle">提升注意力，培养专注力</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="difficulty-selector">
+                <label>难度选择：</label>
+                <select id="difficulty">
+                    <option value="3">简单 (3×3)</option>
+                    <option value="4">中等 (4×4)</option>
+                    <option value="5" selected>标准 (5×5)</option>
+                    <option value="6">困难 (6×6)</option>
+                    <option value="7">挑战 (7×7)</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">开始训练</button>
+                <button id="resetBtn" class="btn btn-secondary" disabled>重新开始</button>
+                <button id="fullscreenBtn" class="btn btn-secondary" title="全屏模式">
+                    <span id="fullscreenIcon">⛶</span> <span id="fullscreenText">全屏</span>
+                </button>
+                <button id="printBtn" class="btn btn-secondary">打印练习</button>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="timer">
+                <span>⏱️ 用时：</span>
+                <span id="timer">00:00</span>
+            </div>
+            <div class="current-number">
+                <span>当前寻找：</span>
+                <span id="currentNum">-</span>
+            </div>
+            <div class="best-time">
+                <span>🏆 最佳成绩：</span>
+                <span id="bestTime">--</span>
+            </div>
+        </div>
+
+        <div id="gameBoard" class="game-board"></div>
+
+        <div id="resultModal" class="modal">
+            <div class="modal-content">
+                <h2>🎉 完成！</h2>
+                <p class="result-time">用时：<span id="resultTime"></span></p>
+                <p class="result-message" id="resultMessage"></p>
+                <button id="closeModal" class="btn btn-primary">继续训练</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 使用说明</h3>
+            <ol>
+                <li>点击"开始训练"按钮</li>
+                <li>按照数字顺序（1, 2, 3...）快速点击方格中的数字</li>
+                <li>完成后会显示您的用时和评价</li>
+                <li>每天坚持练习3-5分钟，提升专注力！</li>
+            </ol>
+            <div class="tips">
+                <strong>💡 小贴士：</strong>
+                <ul>
+                    <li>三年级学生建议从5×5开始，目标30-50秒</li>
+                    <li>保持安静的环境，减少干扰</li>
+                    <li>记录每次成绩，观察进步</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="history">
+            <h3>📊 训练记录</h3>
+            <div id="historyList" class="history-list">
+                <p class="no-history">暂无训练记录</p>
+            </div>
+            <button id="clearHistory" class="btn btn-secondary">清空记录</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

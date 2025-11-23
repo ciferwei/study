@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="小学生学习训练游戏集合">
+    <title>学习训练游戏集合</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .game-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .game-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+        
+        .game-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .game-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .game-features {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #999;
+        }
+        
+        .game-features span {
+            display: inline-block;
+            margin: 3px 5px;
+            padding: 3px 8px;
+            background: #e7f3ff;
+            border-radius: 5px;
+            color: #667eea;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 学习训练游戏集合</h1>
+            <p class="subtitle">专为小学生设计，提升学习能力</p>
+        </header>
+        
+        <div class="games-grid" id="gamesGrid">
+            <!-- 游戏卡片将通过JavaScript动态加载 -->
+        </div>
+        
+        <div class="footer">
+            <p>持续更新中，敬请期待更多训练游戏！</p>
+        </div>
+    </div>
+    
+    <script>
+        // 游戏列表配置
+        const games = [
+            {
+                id: 'schulte-grid',
+                name: '舒尔特方格训练',
+                icon: '🎯',
+                description: '提升注意力集中度，培养专注力，减少粗心错误',
+                features: ['多种难度', '成绩记录', 'PWA支持', '离线使用'],
+                path: '/schulte-grid/'
+            }
+            // 后续添加的游戏可以在这里添加
+            // {
+            //     id: 'math-practice',
+            //     name: '数学练习',
+            //     icon: '🔢',
+            //     description: '数学计算训练',
+            //     features: ['加减乘除', '难度分级'],
+            //     path: '/math-practice/'
+            // }
+        ];
+        
+        // 渲染游戏卡片
+        function renderGames() {
+            const grid = document.getElementById('gamesGrid');
+            
+            if (games.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #999; grid-column: 1 / -1;">暂无游戏，敬请期待！</p>';
+                return;
+            }
+            
+            grid.innerHTML = games.map(game => `
+                <a href="${game.path}" class="game-card">
+                    <div class="game-icon">${game.icon}</div>
+                    <div class="game-title">${game.name}</div>
+                    <div class="game-description">${game.description}</div>
+                    <div class="game-features">
+                        ${game.features.map(f => `<span>${f}</span>`).join('')}
+                    </div>
+                </a>
+            `).join('');
+        }
+        
+        // 页面加载时渲染
+        document.addEventListener('DOMContentLoaded', renderGames);
+    </script>
+</body>
+</html>

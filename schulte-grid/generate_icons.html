@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图标生成工具 - 舒尔特方格</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .upload-area:hover {
+            background: #e7f3ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragover {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .preview img {
+            max-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .icon-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .icon-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .icon-item .size {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 20px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 图标生成工具</h1>
+        
+        <div class="instructions">
+            <strong>使用说明：</strong>
+            <ol>
+                <li>上传一张图片（建议512×512像素）或使用默认图标</li>
+                <li>点击"生成所有图标"按钮</li>
+                <li>右键点击每个图标，选择"另存为"保存到本地</li>
+                <li>将所有图标文件放到应用目录中</li>
+            </ol>
+        </div>
+        
+        <div class="section">
+            <h2>1. 上传源图片</h2>
+            <div class="upload-area" id="uploadArea">
+                <p>📁 点击或拖拽图片到这里</p>
+                <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                    支持 PNG, JPG, GIF 格式<br>
+                    建议尺寸：512×512 像素
+                </p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            <div class="preview" id="preview" style="display: none;">
+                <img id="previewImg" alt="预览">
+                <p id="previewInfo" style="margin-top: 10px; color: #666;"></p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>2. 生成图标</h2>
+            <div style="text-align: center;">
+                <button class="btn btn-primary" id="generateBtn" disabled>生成所有图标</button>
+                <button class="btn btn-primary" id="createDefaultBtn">创建默认图标</button>
+            </div>
+        </div>
+        
+        <div class="section" id="iconsSection" style="display: none;">
+            <h2>3. 下载图标</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                右键点击每个图标，选择"图片另存为"保存到本地
+            </p>
+            <div class="icons-grid" id="iconsGrid"></div>
+            <div id="status"></div>
+        </div>
+    </div>
+    
+    <script>
+        const ICON_SIZES = [72, 96, 128, 144, 152, 192, 384, 512];
+        let sourceImage = null;
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const previewImg = document.getElementById('previewImg');
+        const previewInfo = document.getElementById('previewInfo');
+        const generateBtn = document.getElementById('generateBtn');
+        const createDefaultBtn = document.getElementById('createDefaultBtn');
+        const iconsSection = document.getElementById('iconsSection');
+        const iconsGrid = document.getElementById('iconsGrid');
+        const status = document.getElementById('status');
+        
+        // 上传区域点击
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // 文件选择
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        // 拖拽上传
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+        
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showStatus('请选择图片文件', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    sourceImage = img;
+                    previewImg.src = e.target.result;
+                    previewInfo.textContent = `尺寸: ${img.width} × ${img.height} 像素`;
+                    preview.style.display = 'block';
+                    generateBtn.disabled = false;
+                    showStatus('图片加载成功！', 'success');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 创建默认图标
+        createDefaultBtn.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            // 背景
+            const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 512, 512);
+            
+            // 圆形
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 20;
+            ctx.beginPath();
+            ctx.arc(256, 256, 200, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // 文字
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 180px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🎯', 256, 256);
+            
+            const img = new Image();
+            img.onload = () => {
+                sourceImage = img;
+                previewImg.src = canvas.toDataURL('image/png');
+                previewInfo.textContent = '默认图标 (512 × 512 像素)';
+                preview.style.display = 'block';
+                generateBtn.disabled = false;
+                showStatus('默认图标已创建！', 'success');
+            };
+            img.src = canvas.toDataURL('image/png');
+        });
+        
+        // 生成图标
+        generateBtn.addEventListener('click', () => {
+            if (!sourceImage) return;
+            
+            iconsGrid.innerHTML = '';
+            iconsSection.style.display = 'block';
+            
+            ICON_SIZES.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // 高质量缩放
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(sourceImage, 0, 0, size, size);
+                
+                const iconItem = document.createElement('div');
+                iconItem.className = 'icon-item';
+                
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL('image/png');
+                img.alt = `icon-${size}.png`;
+                img.style.cursor = 'pointer';
+                img.title = '右键点击保存';
+                
+                const sizeLabel = document.createElement('div');
+                sizeLabel.className = 'size';
+                sizeLabel.textContent = `${size}×${size}`;
+                
+                iconItem.appendChild(img);
+                iconItem.appendChild(sizeLabel);
+                iconsGrid.appendChild(iconItem);
+            });
+            
+            showStatus(`✅ 成功生成 ${ICON_SIZES.length} 个图标！右键点击每个图标保存到本地。`, 'success');
+        });
+        
+        function showStatus(message, type) {
+            status.className = `status ${type}`;
+            status.textContent = message;
+            status.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
