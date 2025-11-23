@@ -80,19 +80,21 @@ python3 -m http.server 8000
 
 详细步骤请查看 [极空间简单部署.md](极空间简单部署.md)
 
-#### 方法二：Docker部署（支持完整PWA功能）
+#### 方法二：Docker部署（推荐⭐）
 
-**一键部署整个项目，支持HTTPS和PWA：**
+**使用现成Nginx镜像，直接挂载NAS目录，无需构建：**
 
-1. **上传整个study文件夹到NAS**
-2. **使用Docker Compose部署**：
-   ```bash
-   cd study
-   docker-compose up -d
-   ```
-3. **访问游戏列表**：`http://NAS-IP:8080/`
+1. **上传study文件夹到NAS**（如 `/docker/study`）
+2. **修改docker-compose.yml中的路径**
+3. **在极空间Docker中启动容器**
+4. **访问游戏列表**：`http://NAS-IP:8080/`
 
-详细部署步骤请查看 [部署到极空间NAS.md](部署到极空间NAS.md)
+**优势：**
+- ✅ 无需构建镜像，开箱即用
+- ✅ 文件更新后自动生效
+- ✅ 配置简单，只需修改路径
+
+详细步骤请查看 [极空间Docker一键部署.md](极空间Docker一键部署.md)
 
 #### 方法三：虚拟机部署（最专业，推荐）
 
