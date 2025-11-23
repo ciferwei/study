@@ -7,11 +7,8 @@
 ```
 study/
 ├── index.html              # 游戏列表入口页面
-├── docker-compose.yml      # Docker统一部署配置
-├── Dockerfile              # Docker镜像构建
-├── nginx.conf              # Nginx配置文件
 ├── README.md               # 项目说明（本文件）
-├── 部署到极空间NAS.md       # 完整部署指南
+├── 极空间简单部署.md        # 简单部署指南
 │
 ├── schulte-grid/           # 舒尔特方格训练游戏
 │   ├── index.html          # 主应用文件
