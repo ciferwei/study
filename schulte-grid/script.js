@@ -83,6 +83,29 @@ function init() {
         lastTouchEnd = now;
     }, false);
     
+    // 使用事件委托优化点击性能（只绑定一次事件）
+    gameBoard.addEventListener('click', (e) => {
+        const cell = e.target.closest('.cell');
+        if (cell && !cell.classList.contains('clicked')) {
+            const clickedNumber = parseInt(cell.dataset.number);
+            if (clickedNumber) {
+                handleCellClick(cell, clickedNumber);
+            }
+        }
+    }, { passive: true });
+    
+    // 触摸事件优化
+    gameBoard.addEventListener('touchend', (e) => {
+        const cell = e.target.closest('.cell');
+        if (cell && !cell.classList.contains('clicked')) {
+            e.preventDefault(); // 防止双击缩放
+            const clickedNumber = parseInt(cell.dataset.number);
+            if (clickedNumber) {
+                handleCellClick(cell, clickedNumber);
+            }
+        }
+    }, { passive: false });
+    
     // 防止全屏模式下select触发键盘
     preventSelectKeyboard();
 }
@@ -213,7 +236,6 @@ function generateBoard() {
         // 不自动高亮，让用户自己寻找
         // 这样更符合舒尔特方格的训练目的
         
-        cell.addEventListener('click', () => handleCellClick(cell, num));
         gameBoard.appendChild(cell);
     });
 }
@@ -226,33 +248,41 @@ function shuffleArray(array) {
     }
 }
 
-// 处理单元格点击
+// 处理单元格点击（优化快速点击性能）
 function handleCellClick(cell, clickedNumber) {
     if (!gameState.isPlaying) return;
+    
+    // 防止重复点击同一个单元格
+    if (cell.classList.contains('clicked')) {
+        return;
+    }
     
     const expectedNumber = gameState.currentNumber;
     
     if (clickedNumber === expectedNumber) {
-        // 正确
-        cell.classList.add('clicked');
-        
+        // 正确 - 立即更新状态，同步更新UI以最快响应
         gameState.currentNumber++;
         
+        // 同步更新UI，不使用requestAnimationFrame以加快响应
+        cell.classList.add('clicked');
+        currentNumDisplay.textContent = gameState.currentNumber;
+        
         // 检查是否完成
-        if (gameState.currentNumber > gameState.difficulty * gameState.difficulty) {
-            finishGame();
+        const totalCells = gameState.difficulty * gameState.difficulty;
+        if (gameState.currentNumber > totalCells) {
+            // 使用微任务确保状态更新完成
+            Promise.resolve().then(() => {
+                finishGame();
+            });
             return;
         }
-        
-        // 不自动高亮下一个数字，让用户自己寻找
-        // 只更新提示文字，保持训练效果
-        currentNumDisplay.textContent = gameState.currentNumber;
     } else {
-        // 错误
+        // 错误 - 快速反馈，短时间显示
         cell.classList.add('wrong');
+        // 缩短错误提示时间，加快响应
         setTimeout(() => {
             cell.classList.remove('wrong');
-        }, 500);
+        }, 250); // 从500ms缩短到250ms
     }
 }
 

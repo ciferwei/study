@@ -247,8 +247,14 @@ header h1 {
     font-weight: bold;
     color: #333;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.1s, border-color 0.1s, color 0.1s;
     user-select: none;
+    /* 优化触摸响应 */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    /* 使用GPU加速 */
+    will-change: background-color, transform;
+    transform: translateZ(0);
 }
 
 .cell:hover {
@@ -261,7 +267,9 @@ header h1 {
     background: #28a745;
     color: white;
     border-color: #1e7e34;
-    transform: scale(0.95);
+    transform: translateZ(0) scale(0.98);
+    /* 移除transform动画，加快响应 */
+    transition: background-color 0.05s, border-color 0.05s, color 0.05s;
 }
 
 .cell.current {
@@ -275,7 +283,8 @@ header h1 {
     background: #dc3545;
     color: white;
     border-color: #c82333;
-    animation: shake 0.5s;
+    animation: shake 0.3s;
+    transform: translateZ(0);
 }
 
 @keyframes pulse {
