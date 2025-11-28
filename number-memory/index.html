@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="数字记忆训练 - 提升工作记忆和听觉注意力">
+    <meta name="keywords" content="数字记忆,注意力训练,记忆训练,小学生">
+    
+    <!-- PWA相关 -->
+    <meta name="theme-color" content="#28a745">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="数字记忆训练">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <title>数字记忆训练</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 数字记忆训练</h1>
+            <p class="subtitle">提升工作记忆，增强听觉注意力</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="difficulty-selector">
+                <label>难度选择：</label>
+                <select id="difficulty" class="difficulty-select-desktop">
+                    <option value="3">简单 (3位数字)</option>
+                    <option value="4" selected>中等 (4位数字)</option>
+                    <option value="5">困难 (5位数字)</option>
+                    <option value="6">挑战 (6位数字)</option>
+                    <option value="7">极限 (7位数字)</option>
+                </select>
+                <div id="difficultyButtons" class="difficulty-buttons">
+                    <button class="difficulty-btn" data-value="3">3位</button>
+                    <button class="difficulty-btn active" data-value="4">4位</button>
+                    <button class="difficulty-btn" data-value="5">5位</button>
+                    <button class="difficulty-btn" data-value="6">6位</button>
+                    <button class="difficulty-btn" data-value="7">7位</button>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">开始训练</button>
+                <button id="resetBtn" class="btn btn-secondary" disabled>重新开始</button>
+                <button id="fullscreenBtn" class="btn btn-secondary" title="全屏模式">
+                    <span id="fullscreenIcon">⛶</span> <span id="fullscreenText">全屏</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="timer">
+                <span>⏱️ 用时：</span>
+                <span id="timer">00:00</span>
+            </div>
+            <div class="current-round">
+                <span>第 <span id="roundNum">-</span> 轮</span>
+            </div>
+            <div class="best-time">
+                <span>🏆 最佳成绩：</span>
+                <span id="bestTime">--</span>
+            </div>
+        </div>
+
+        <div id="gameArea" class="game-area">
+            <div id="displayPhase" class="phase display-phase">
+                <div class="instruction">记住这些数字：</div>
+                <div id="numberDisplay" class="number-display"></div>
+                <div class="countdown" id="countdown"></div>
+            </div>
+            
+            <div id="inputPhase" class="phase input-phase" style="display: none;">
+                <div class="instruction">按顺序输入数字：</div>
+                <div class="input-methods">
+                    <div class="keyboard-input-wrapper">
+                        <label for="keyboardInput" class="input-label">键盘输入（PC端）：</label>
+                        <input type="text" id="keyboardInput" class="keyboard-input" placeholder="直接输入数字序列，如：1234" autocomplete="off" inputmode="numeric" maxlength="10">
+                        <div class="input-hint">提示：输入数字后按回车键提交</div>
+                    </div>
+                    <div class="pad-input-wrapper">
+                        <label class="input-label">点击输入（移动端）：</label>
+                        <div id="numberPad" class="number-pad"></div>
+                    </div>
+                </div>
+                <div id="inputDisplay" class="input-display">
+                    <span>已输入：</span>
+                    <span id="inputNumbers"></span>
+                </div>
+                <div class="input-controls">
+                    <button id="deleteBtn" class="btn btn-delete" title="删除最后一个数字">⌫ 删除</button>
+                    <button id="clearBtn" class="btn btn-clear" title="清空所有输入">🗑️ 清空</button>
+                    <button id="submitBtn" class="btn btn-submit" title="提交答案">✓ 提交</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultModal" class="modal">
+            <div class="modal-content">
+                <h2 id="resultTitle">🎉 完成！</h2>
+                <p class="result-time">用时：<span id="resultTime"></span></p>
+                <p class="result-message" id="resultMessage"></p>
+                <button id="closeModal" class="btn btn-primary">继续训练</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 使用说明</h3>
+            <ol>
+                <li>点击"开始训练"按钮</li>
+                <li>仔细观察屏幕上显示的数字序列</li>
+                <li>记住数字的顺序</li>
+                <li>在数字键盘上按顺序点击数字</li>
+                <li>完成后查看成绩和评价</li>
+            </ol>
+            <div class="tips">
+                <strong>💡 小贴士：</strong>
+                <ul>
+                    <li>三年级学生建议从4位数字开始</li>
+                    <li>集中注意力，仔细观察</li>
+                    <li>每天坚持练习，逐步提升</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="history">
+            <h3>📊 训练记录</h3>
+            <div id="historyList" class="history-list">
+                <p class="no-history">暂无训练记录</p>
+            </div>
+            <button id="clearHistory" class="btn btn-secondary">清空记录</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

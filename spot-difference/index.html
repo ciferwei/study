@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="找不同游戏 - 提升视觉注意力和观察力">
+    <meta name="keywords" content="找不同,注意力训练,观察力,视觉训练">
+    
+    <!-- PWA相关 -->
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="找不同游戏">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <title>找不同游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 找不同游戏</h1>
+            <p class="subtitle">提升视觉注意力，培养细致观察力</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="difficulty-selector">
+                <label>难度选择：</label>
+                <select id="difficulty" class="difficulty-select-desktop">
+                    <option value="3">简单 (3处不同)</option>
+                    <option value="4" selected>中等 (4处不同)</option>
+                    <option value="5">困难 (5处不同)</option>
+                    <option value="6">挑战 (6处不同)</option>
+                    <option value="7">极限 (7处不同)</option>
+                </select>
+                <div id="difficultyButtons" class="difficulty-buttons">
+                    <button class="difficulty-btn" data-value="3">3处</button>
+                    <button class="difficulty-btn active" data-value="4">4处</button>
+                    <button class="difficulty-btn" data-value="5">5处</button>
+                    <button class="difficulty-btn" data-value="6">6处</button>
+                    <button class="difficulty-btn" data-value="7">7处</button>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">开始游戏</button>
+                <button id="resetBtn" class="btn btn-secondary" disabled>重新开始</button>
+                <button id="hintBtn" class="btn btn-secondary" disabled>提示</button>
+                <button id="fullscreenBtn" class="btn btn-secondary" title="全屏模式">
+                    <span id="fullscreenIcon">⛶</span> <span id="fullscreenText">全屏</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="timer">
+                <span>⏱️ 用时：</span>
+                <span id="timer">00:00</span>
+            </div>
+            <div class="found-count">
+                <span>已找到：</span>
+                <span id="foundCount">0</span> / <span id="totalCount">-</span>
+            </div>
+            <div class="best-time">
+                <span>🏆 最佳成绩：</span>
+                <span id="bestTime">--</span>
+            </div>
+        </div>
+
+        <div id="gameArea" class="game-area">
+            <div id="waitingPhase" class="phase">
+                <div class="instruction">点击"开始游戏"开始挑战</div>
+            </div>
+            
+            <div id="playingPhase" class="phase" style="display: none;">
+                <div class="images-container">
+                    <div class="image-wrapper">
+                        <div id="imageLeft" class="game-image"></div>
+                        <div class="image-label">图片A</div>
+                    </div>
+                    <div class="image-wrapper">
+                        <div id="imageRight" class="game-image"></div>
+                        <div class="image-label">图片B</div>
+                    </div>
+                </div>
+                <div class="hint-info" id="hintInfo"></div>
+            </div>
+        </div>
+
+        <div id="resultModal" class="modal">
+            <div class="modal-content">
+                <h2 id="resultTitle">🎉 完成！</h2>
+                <p class="result-time">用时：<span id="resultTime"></span></p>
+                <p class="result-message" id="resultMessage"></p>
+                <button id="closeModal" class="btn btn-primary">继续游戏</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 使用说明</h3>
+            <ol>
+                <li>点击"开始游戏"按钮</li>
+                <li>仔细观察左右两张图片</li>
+                <li>找出所有不同的地方并点击标记</li>
+                <li>找到所有不同后完成挑战</li>
+                <li>可以点击"提示"按钮获得帮助</li>
+            </ol>
+            <div class="tips">
+                <strong>💡 小贴士：</strong>
+                <ul>
+                    <li>三年级学生建议从4处不同开始</li>
+                    <li>仔细观察每个细节</li>
+                    <li>按顺序从左到右、从上到下检查</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="history">
+            <h3>📊 游戏记录</h3>
+            <div id="historyList" class="history-list">
+                <p class="no-history">暂无游戏记录</p>
+            </div>
+            <button id="clearHistory" class="btn btn-secondary">清空记录</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

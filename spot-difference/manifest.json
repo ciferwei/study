@@ -1,0 +1,28 @@
+{
+  "name": "找不同游戏",
+  "short_name": "找不同",
+  "description": "提升视觉注意力和观察力的训练游戏",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ff6b6b",
+  "theme_color": "#ff6b6b",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "games"],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}
+

@@ -1,0 +1,28 @@
+{
+  "name": "数字记忆训练",
+  "short_name": "数字记忆",
+  "description": "提升工作记忆和听觉注意力的训练游戏",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#28a745",
+  "theme_color": "#28a745",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "games"],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}
+

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="数字计算训练 - 提升计算速度和准确性">
+    <meta name="keywords" content="数学计算,计算训练,口算,小学生">
+    
+    <!-- PWA相关 -->
+    <meta name="theme-color" content="#007bff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="数字计算训练">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <title>数字计算训练</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔢 数字计算训练</h1>
+            <p class="subtitle">提升计算速度，培养数学思维</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="difficulty-selector">
+                <label>难度选择：</label>
+                <select id="difficulty" class="difficulty-select-desktop">
+                    <option value="easy" selected>简单 (2位数加减，无进位)</option>
+                    <option value="medium">中等 (2位数加减，带进位)</option>
+                    <option value="multiply">乘法 (九九乘法表)</option>
+                    <option value="multiply2">乘法 (2位数×1位数)</option>
+                    <option value="divide">除法 (2位数÷1位数)</option>
+                    <option value="mixed">混合 (加减乘混合)</option>
+                </select>
+                <div id="difficultyButtons" class="difficulty-buttons">
+                    <button class="difficulty-btn active" data-value="easy">简单</button>
+                    <button class="difficulty-btn" data-value="medium">中等</button>
+                    <button class="difficulty-btn" data-value="multiply">乘法1</button>
+                    <button class="difficulty-btn" data-value="multiply2">乘法2</button>
+                    <button class="difficulty-btn" data-value="divide">除法</button>
+                    <button class="difficulty-btn" data-value="mixed">混合</button>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">开始训练</button>
+                <button id="resetBtn" class="btn btn-secondary" disabled>重新开始</button>
+                <button id="fullscreenBtn" class="btn btn-secondary" title="全屏模式">
+                    <span id="fullscreenIcon">⛶</span> <span id="fullscreenText">全屏</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="timer">
+                <span>⏱️ 用时：</span>
+                <span id="timer">00:00</span>
+            </div>
+            <div class="score">
+                <span>得分：</span>
+                <span id="score">0</span>
+            </div>
+            <div class="accuracy">
+                <span>正确率：</span>
+                <span id="accuracy">--</span>
+            </div>
+            <div class="best-score">
+                <span>🏆 最佳：</span>
+                <span id="bestScore">--</span>
+            </div>
+        </div>
+
+        <div id="gameArea" class="game-area">
+            <div id="waitingPhase" class="phase">
+                <div class="instruction">点击"开始训练"开始挑战</div>
+            </div>
+            
+            <div id="playingPhase" class="phase" style="display: none;">
+                <div class="question-container">
+                    <div id="question" class="question"></div>
+                    <div class="answer-input-wrapper">
+                        <input type="text" id="answerInput" class="answer-input" placeholder="输入答案" autocomplete="off" inputmode="numeric">
+                        <button id="submitBtn" class="btn btn-submit">提交答案</button>
+                    </div>
+                </div>
+                <div id="feedback" class="feedback"></div>
+            </div>
+        </div>
+
+        <div id="resultModal" class="modal">
+            <div class="modal-content">
+                <h2 id="resultTitle">🎉 训练完成！</h2>
+                <div class="result-stats">
+                    <p>总题数：<span id="resultTotal">0</span></p>
+                    <p>正确数：<span id="resultCorrect">0</span></p>
+                    <p>正确率：<span id="resultAccuracy">0%</span></p>
+                    <p>用时：<span id="resultTime"></span></p>
+                    <p>得分：<span id="resultScore">0</span></p>
+                </div>
+                <p class="result-message" id="resultMessage"></p>
+                <button id="closeModal" class="btn btn-primary">继续训练</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 使用说明</h3>
+            <ol>
+                <li>点击"开始训练"按钮</li>
+                <li>快速计算题目并输入答案</li>
+                <li>按回车键或点击输入框提交答案</li>
+                <li>连续答对可获得更高分数</li>
+                <li>训练时间默认2分钟</li>
+            </ol>
+            <div class="tips">
+                <strong>💡 小贴士：</strong>
+                <ul>
+                    <li>三年级学生建议从"简单"难度开始</li>
+                    <li>集中注意力，提高计算速度</li>
+                    <li>保持准确性，避免粗心错误</li>
+                    <li>每天坚持练习，逐步提升</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="history">
+            <h3>📊 训练记录</h3>
+            <div id="historyList" class="history-list">
+                <p class="no-history">暂无训练记录</p>
+            </div>
+            <button id="clearHistory" class="btn btn-secondary">清空记录</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

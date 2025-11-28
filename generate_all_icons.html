@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量生成游戏图标</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .game-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .game-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .icon-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .icon-item {
+            text-align: center;
+        }
+        
+        .icon-item canvas {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .icon-item label {
+            display: block;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 批量生成游戏图标</h1>
+        
+        <div class="info">
+            <strong>使用说明：</strong>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li>点击每个游戏下方的"生成图标"按钮</li>
+                <li>右键点击预览图标，选择"图片另存为"</li>
+                <li>将图标保存到对应的游戏文件夹中，命名为 icon-152.png 和 icon-192.png</li>
+            </ol>
+        </div>
+        
+        <div class="game-section" id="numberMemory">
+            <h2>🧠 数字记忆训练</h2>
+            <div class="icon-preview" id="preview-number-memory"></div>
+            <button class="btn" onclick="generateIcons('number-memory', '#28a745', '🧠')">生成图标</button>
+        </div>
+        
+        <div class="game-section" id="spotDifference">
+            <h2>🔍 找不同游戏</h2>
+            <div class="icon-preview" id="preview-spot-difference"></div>
+            <button class="btn" onclick="generateIcons('spot-difference', '#ff6b6b', '🔍')">生成图标</button>
+        </div>
+        
+        <div class="game-section" id="mathPractice">
+            <h2>🔢 数字计算训练</h2>
+            <div class="icon-preview" id="preview-math-practice"></div>
+            <button class="btn" onclick="generateIcons('math-practice', '#007bff', '🔢')">生成图标</button>
+        </div>
+    </div>
+    
+    <script>
+        function generateIcons(gameId, color, emoji) {
+            const preview = document.getElementById(`preview-${gameId}`);
+            preview.innerHTML = '';
+            
+            const sizes = [152, 192];
+            
+            sizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // 绘制渐变背景
+                const gradient = ctx.createLinearGradient(0, 0, size, size);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(1, adjustColor(color, -20));
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, size, size);
+                
+                // 绘制圆角
+                ctx.globalCompositeOperation = 'destination-in';
+                ctx.beginPath();
+                const radius = size * 0.2;
+                ctx.roundRect(0, 0, size, size, radius);
+                ctx.fill();
+                ctx.globalCompositeOperation = 'source-over';
+                
+                // 绘制emoji
+                ctx.font = `${size * 0.6}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = 'white';
+                ctx.fillText(emoji, size / 2, size / 2);
+                
+                // 添加到预览
+                const item = document.createElement('div');
+                item.className = 'icon-item';
+                item.appendChild(canvas);
+                const label = document.createElement('label');
+                label.textContent = `${size}x${size}`;
+                item.appendChild(label);
+                preview.appendChild(item);
+            });
+        }
+        
+        function adjustColor(color, amount) {
+            const hex = color.replace('#', '');
+            const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
+            const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
+            const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
+            return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+        }
+        
+        // 添加 roundRect polyfill
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+    </script>
+</body>
+</html>
+
