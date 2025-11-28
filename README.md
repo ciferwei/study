@@ -1,117 +1,93 @@
 # 学习训练游戏集合
 
-这是一个专为小学生设计的学习训练游戏集合，帮助提升各种学习能力。
+这是一个专为小学生设计的浏览器端学习训练游戏集合，聚焦注意力、记忆力与计算力等核心学习能力，可直接本地运行或通过 GitHub Pages 等静态托管平台发布。
 
 ## 📁 项目结构
 
 ```
 study/
-├── index.html              # 游戏列表入口页面
-├── README.md               # 项目说明（本文件）
-├── 极空间简单部署.md        # 简单部署指南
+├── index.html                # 游戏聚合主页
+├── README.md                 # 项目说明（本文件）
+├── generate_all_icons.html   # 图标批量生成工具
 │
-├── schulte-grid/           # 舒尔特方格训练游戏
-│   ├── index.html          # 主应用文件
-│   ├── style.css           # 样式文件
-│   ├── script.js           # 核心功能
-│   ├── manifest.json       # PWA配置
-│   ├── service-worker.js   # 离线支持
-│   ├── icon-*.png          # 应用图标
-│   ├── generate_icons.html # 图标生成工具
-│   ├── README.md           # 游戏说明
-│   └── ...                 # 其他文档
-│
-└── [其他游戏]/             # 后续开发的训练游戏
-    └── ...
+├── schulte-grid/             # 舒尔特方格训练
+├── number-memory/            # 数字记忆训练
+├── spot-difference/          # 找不同训练
+└── math-practice/            # 数字计算训练
 ```
 
-## 🎮 已包含的游戏
+> 每个子目录均包含 `index.html + style.css + script.js + manifest.json + service-worker.js`，可独立作为 PWA 运行。
 
-### 1. 舒尔特方格训练 (`schulte-grid/`)
+## 🎮 游戏清单
 
-**功能：**
-- 🎯 多种难度选择（3×3 到 7×7）
-- ⏱️ 精确计时和成绩记录
-- 🏆 最佳成绩和历史记录
-- 📱 支持PWA，可安装到iPad
-- 🔌 离线使用
-- 📱 全屏模式，兼容PC、手机、iPad
+### 舒尔特方格训练（`schulte-grid/`）
+- 支持 3×3~7×7 多难度网格
+- 计时、最佳成绩与历史记录持久化
+- PWA + 离线 + 全屏模式，适配 PC / 平板 / 手机
+- 详细玩法见 `schulte-grid/README.md`
 
-**快速开始：**
+### 数字记忆训练（`number-memory/`）
+- 记忆 3~7 位数字序列，锻炼工作记忆与听觉注意力
+- 键盘输入 + 触控数字键盘双操作模式
+- 训练记录、最佳时间统计、全屏与 PWA 支持
+
+### 找不同训练（`spot-difference/`）
+- 可配置 3~7 处差异，支持提示、计时和成绩记录
+- 双图同步标记反馈，强化视觉注意力与观察顺序
+- 全屏、历史记录与离线访问
+
+### 数字计算训练（`math-practice/`）
+- 加减乘除多难度阶梯，含混合运算与计分系统
+- 计时、正确率、连对奖励及训练历史
+- 全屏模式、PWA 和离线缓存，提高练习灵活性
+
+## 🚀 运行 & 部署
+
+### 本地运行
 ```bash
-cd schulte-grid
-# 直接用浏览器打开 index.html
-# 或使用本地服务器
+# 方式1：直接双击任何游戏目录下的 index.html
+
+# 方式2：使用本地静态服务器（推荐）
+cd math-practice          # 进入任意游戏目录
 python3 -m http.server 8000
+# 浏览器访问 http://localhost:8000
 ```
 
-详细说明请查看 [schulte-grid/README.md](schulte-grid/README.md)
+### GitHub Pages 发布
+1. 仓库设置为 Public。
+2. 打开仓库 `Settings → Pages`，在 “Build and deployment / Source” 选择 `Deploy from a branch`。
+3. 指定 `Branch = main`（或保存网页的分支），`Folder = /(root)`，保存后等待构建完成。
+4. 几分钟后即可通过 `https://用户名.github.io/仓库名/` 访问聚合页，子游戏以子路径方式访问。
 
-## 🚀 快速开始
+> 也可部署到 Netlify、Vercel、Cloudflare Pages 等任意静态托管服务，步骤与普通静态站点相同。
 
-### 运行单个游戏
-
-每个游戏都是独立的，可以直接运行：
-
-```bash
-# 进入游戏目录
-cd schulte-grid
-
-# 方法1：直接打开
-# 在浏览器中打开 index.html
-
-# 方法2：使用本地服务器（推荐）
-python3 -m http.server 8000
-# 然后访问 http://localhost:8000
-```
-
-### 部署到极空间NAS
-
-**超简单部署（直接挂载方式）：**
-
-1. **上传整个study文件夹到NAS的web目录**
-2. **通过极空间客户端或Web界面打开 `index.html`**
-3. **完成！**
-
-详细步骤请查看 [极空间简单部署.md](极空间简单部署.md)
-
-**说明：**
-- 直接通过极空间文件服务访问，无需Docker或虚拟机
-- 基本功能完全可用
-- 适合简单使用场景
-
-### 独立部署单个游戏
-
-每个游戏也可以独立部署，查看各游戏目录下的部署文档。
-
-## 📝 开发新游戏
-
-在 `study` 目录下创建新的游戏文件夹：
+## 🧱 开发新游戏
 
 ```bash
+cd study
 mkdir my-new-game
 cd my-new-game
-# 开始开发...
+# 复制现有目录结构或使用 generate_all_icons.html 生成图标后开始开发
 ```
+
+建议沿用现有 PWA 结构与 UI 规范，确保统一的离线、全屏、历史记录等体验。
 
 ## 📚 文档
 
-每个游戏都有独立的文档：
-- `schulte-grid/README.md` - 游戏说明
-- `schulte-grid/README_IPAD.md` - iPad安装指南
-- `schulte-grid/安装到iPad.md` - 中文安装指南
+- `README.md`（本文件）—— 项目概览与部署说明
+- `schulte-grid/README.md` —— 舒尔特方格玩法说明
 
 ## 🎯 训练目标
 
 这些游戏旨在帮助小学生：
-- 提升注意力集中度
-- 培养数学思维
-- 减少粗心错误
-- 提高学习效率
+- 提升注意力集中度与视觉/听觉专注
+- 培养数学思维与心算速度
+- 增强工作记忆与观察力
+- 降低粗心错误、提升学习效率
 
 ## 📄 许可证
 
-本项目为开源项目，可自由使用和修改。
+本项目为开源项目，可自由使用、修改和部署。
 
 ---
 
